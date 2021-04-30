@@ -5,7 +5,50 @@ const canvas = document.getElementById('user-image');
 const ctx = canvas.getContext('2d');
 const inputimage = document.getElementById('image-input');
 
+const form = document.getElementById('generate-meme');
+const generateB = form.querySelector('button[type = submit]');
+const buttons = document.getElementById('button-group');
+const clearB = buttons.querySelector('button[type = reset]');
+const readB = buttons.querySelector('button[type = button]');
+const inputtop = document.getElementById('text-top');
+const inputbottom = document.getElementById('text-bottom');
 
+const volumeGp = document.getElementById('volume-group');
+const volumeSlide = volumeGp.querySelector('input[type = range]');
+const volumeImg = volumeGp.querySelector('img');
+const voiceSelection = document.getElementById('voice-selection');
+let volume = volumeSlide/100.0;
+
+//add the available voice options. populateVoiceList() is based on template code from Mozilla doc
+function populateVoiceList() {
+  if(typeof speechSynthesis === 'undefined') {
+    return;
+  }
+
+  var voices = speechSynthesis.getVoices();
+  if(voices.length!=0){
+    voiceSelection.disabled = false;
+    document.querySelector('#voice-selection > option').remove();
+  }
+
+  for(var i = 0; i < voices.length; i++) {
+    var option = document.createElement('option');
+    option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
+
+    if(voices[i].default) {
+      option.textContent += ' -- DEFAULT';
+    }
+
+    option.setAttribute('data-lang', voices[i].lang);
+    option.setAttribute('data-name', voices[i].name);
+    option.value = voices[i].lang;
+    voiceSelection.appendChild(option);
+  }
+}
+populateVoiceList();
+if (typeof speechSynthesis !== 'undefined' && speechSynthesis.onvoiceschanged !== undefined) {
+  speechSynthesis.onvoiceschanged = populateVoiceList;
+}
 
 // Fires whenever the img object loads a new image (such as with img.src =)
 img.addEventListener('load', () => {
@@ -31,13 +74,6 @@ inputimage.addEventListener('change', () =>{
   console.log(inputimage.files[0]);
 });
 
-const form = document.getElementById('generate-meme');
-const generateB = form.querySelector('button[type = submit]');
-const buttons = document.getElementById('button-group');
-const clearB = buttons.querySelector('button[type = reset]');
-const readB = buttons.querySelector('button[type = button]');
-const inputtop = document.getElementById('text-top');
-const inputbottom = document.getElementById('text-bottom');
 form.addEventListener('submit', (event)=>{
   event.preventDefault();
   ctx.font = "30px Comic Sans MS";
@@ -62,8 +98,30 @@ clearB.addEventListener('click', ()=>{
 });
 
 readB.addEventListener('click', ()=>{
-
+  var utterThis = new SpeechSynthesisUtterance(inputtop.value + ' '
+   + inputbottom.value);
+  utterThis.lang = voiceSelection.value;
+  utterThis.volume = volume;
+  speechSynthesis.speak(utterThis);
 } );
+
+volumeGp.addEventListener('input', ()=>{
+  const vol = volumeSlide.value;
+  let level;
+  if(vol >= 67){
+    level = 3;
+  }else if(vol >= 34){
+    level = 2;
+  }else if(vol >= 1){
+    level = 1;
+  }else{
+    level = 0;
+  }
+
+  volumeImg.src = 'icons/volume-level-' + level + '.svg';
+  volume = vol/100.0;
+});
+
 
 /**
  * Takes in the dimensions of the canvas and the new image, then calculates the new
