@@ -3,19 +3,19 @@
 const img = new Image(); // used to load image from <input> and draw to canvas
 const canvas = document.getElementById('user-image');
 const ctx = canvas.getContext('2d');
-ctx.fillStyle = 'black';
-ctx.fillRect(10, 10, 400, 400);
-var inputimage = document.getElementById('image-input');
-img.src = URL.createObjectURL(inputimage);
-img.alt = objectURL.split("/").pop();
-ctx.drawImage = (img, 400, 400);
+const inputimage = document.getElementById('image-input');
+
+
+
 // Fires whenever the img object loads a new image (such as with img.src =)
 img.addEventListener('load', () => {
   // TODO
-  ctx.fillStyle = 'green';
-  ctx.fillRect(10, 10, 400, 400);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0, 0, 400, 400);
+  const dimensions = getDimmensions(canvas.width, canvas.height, img.width, img.height);
+  ctx.drawImage(img, dimensions.startX, dimensions.startY, dimensions.width, dimensions.height);
 
-  
   
   // Some helpful tips:
   // - Fill the whole Canvas with black first to add borders on non-square images, then draw on top
@@ -23,9 +23,47 @@ img.addEventListener('load', () => {
   // - If you draw the image to canvas here, it will update as soon as a new image is selected
 });
 
-img.addEventListener('change', () =>{
-
+inputimage.addEventListener('change', () =>{
+  console.log(inputimage);
+  img.src = URL.createObjectURL(inputimage.files[0]);
+  img.alt = inputimage.files[0].name;
+  console.log(img.alt);
+  console.log(inputimage.files[0]);
 });
+
+const form = document.getElementById('generate-meme');
+const generateB = form.querySelector('button[type = submit]');
+const buttons = document.getElementById('button-group');
+const clearB = buttons.querySelector('button[type = reset]');
+const readB = buttons.querySelector('button[type = button]');
+const inputtop = document.getElementById('text-top');
+const inputbottom = document.getElementById('text-bottom');
+form.addEventListener('submit', (event)=>{
+  event.preventDefault();
+  ctx.font = "30px Comic Sans MS";
+  ctx.textAlign = 'center';
+  ctx.strokeStyle = 'red';
+  ctx.strokeText(inputtop.value, canvas.width/2, 40 );
+  ctx.strokeText(inputbottom.value, canvas.width/2, canvas.height-40);
+  console.log('submit form'); 
+  generateB.setAttribute('disabled', 'disabled');
+  clearB.removeAttribute('disabled');
+  readB.removeAttribute('disabled');
+} 
+);
+
+clearB.addEventListener('click', ()=>{
+  ctx.clearRect(0,0, canvas.width, canvas.height);
+  generateB.removeAttribute('disabled');
+  clearB.setAttribute('disabled', 'disabled');
+  readB.setAttribute('disabled','disabled');
+  inputtop.value = "";
+  inputbottom.value = "";
+});
+
+readB.addEventListener('click', ()=>{
+
+} );
 
 /**
  * Takes in the dimensions of the canvas and the new image, then calculates the new
