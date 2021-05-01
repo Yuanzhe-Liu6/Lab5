@@ -100,7 +100,7 @@ clearB.addEventListener('click', ()=>{
 readB.addEventListener('click', ()=>{
   var utterThis = new SpeechSynthesisUtterance(inputtop.value + ' '
    + inputbottom.value);
-   const vol = volumeSlide.value;
+  const vol = volumeSlide.value;
   utterThis.lang = voiceSelection.value;
   utterThis.volume = vol/100;
   speechSynthesis.speak(utterThis);
