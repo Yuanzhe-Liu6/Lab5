@@ -10,4 +10,4 @@
 
 ## Part 2:
 
-[LINK TO YOUR PART 2 REPOSITORY](https://github.com/EdwardYuyangTian/github-actions-for-ci/pull/6)
+[LINK TO OUR PART 2 REPOSITORY](https://github.com/Yuanzhe-Liu6/github-actions-for-ci/issues/7)
