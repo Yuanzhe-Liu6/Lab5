@@ -6,7 +6,7 @@
 
 ## Part 1:
 
-LINK TO YOUR PUBLISHED SITE
+[LINK TO YOUR PUBLISHED SITE](https://yuanzhe-liu6.github.io/Lab5/)
 
 ## Part 2:
 
